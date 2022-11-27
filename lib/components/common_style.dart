@@ -9,13 +9,13 @@ final TextStyle labelStyle = TextStyle(
   fontSize: 20.sp,
 );
 
-
 final TextStyle modalHeadingStyle = TextStyle(
   fontSize: 18.sp,
 );
 
 ButtonStyle raisedButtonStyle(Color color) => ElevatedButton.styleFrom(
       minimumSize: Size(50.w, 36.h),
+      // maximumSize: Size(150.w, 50.h),
       backgroundColor: color,
       padding: EdgeInsets.symmetric(horizontal: 16.w),
       shape: RoundedRectangleBorder(
