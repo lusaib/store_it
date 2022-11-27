@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "373229889017",
+    "project_id": "store-it-daed5",
+    "storage_bucket": "store-it-daed5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:373229889017:android:7c12f3ea0b6e986b3cc928",
+        "android_client_info": {
+          "package_name": "com.lusaiblatheef.store_it"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "373229889017-ic65d0lh1mn8gta48e0hmga3aalp6pnm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCzBhPZUA4TczUjXFgYbyKVJ6mK9cedFhY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "373229889017-ic65d0lh1mn8gta48e0hmga3aalp6pnm.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "373229889017-6aleil7tie5rvhhoir10jskcc3ee48oe.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.lusaiblatheef.storeit.storeIt"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
