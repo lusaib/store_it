@@ -1,5 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:store_it/domain/HomePage/Models/CategoryItem/category_sub_items_model.dart';
 part 'category_item_model.freezed.dart';
 part 'category_item_model.g.dart';
 
@@ -10,11 +10,22 @@ class CategoryItemModel with _$CategoryItemModel {
     required String title,
     @Default("") String desc,
     String? password,
-    @Default([]) List<CategorySubItemsModel> subItems,
     required int position,
-    DateTime? createdDate,
+    @TimestampConverter() required DateTime createdDate,
+    @TimestampConverter() required DateTime modifiedDate,
   }) = _CategoryItemModel;
 
   factory CategoryItemModel.fromJson(Map<String, Object?> json) =>
       _$CategoryItemModelFromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class TimestampConverter implements JsonConverter<DateTime, Timestamp> {
+  const TimestampConverter();
+
+  @override
+  DateTime fromJson(Timestamp json) => json.toDate();
+
+  @override
+  Timestamp toJson(DateTime object) => Timestamp.fromDate(object);
 }

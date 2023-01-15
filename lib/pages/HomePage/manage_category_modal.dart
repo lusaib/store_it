@@ -1,4 +1,5 @@
-import 'package:store_it/config/logger_config.dart';
+import 'package:store_it/components/common_style.dart';
+import 'package:store_it/domain/HomePage/LogicFunctions/category_items.dart';
 import 'package:store_it/domain/HomePage/Models/CategoryItem/category_item_model.dart';
 import 'package:store_it/providers/home_page_providers.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +22,9 @@ class ManageCategoryModalState extends ConsumerState<ManageCategoryModal> {
   late TextEditingController _descController;
   late TextEditingController _passwordController;
   bool _isPasswordRequired = false;
+
+  //variable to access service class
+  final CategoryItemsDataService _serviceClass = CategoryItemsDataService();
 
   @override
   void dispose() {
@@ -47,25 +51,6 @@ class ManageCategoryModalState extends ConsumerState<ManageCategoryModal> {
       _passwordController.text = _categoryItemTemp!.password ?? '';
     }
   }
-
-  final TextStyle hintStyle = TextStyle(
-    fontSize: 15.sp,
-  );
-
-  final TextStyle labelStyle = TextStyle(
-    fontSize: 20.sp,
-  );
-
-  ButtonStyle raisedButtonStyle(Color color) => ElevatedButton.styleFrom(
-        minimumSize: Size(50.w, 36.h),
-        backgroundColor: color,
-        padding: EdgeInsets.symmetric(horizontal: 16.w),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(20.r),
-          ),
-        ),
-      );
 
   @override
   Widget build(BuildContext context) {
@@ -98,9 +83,11 @@ class ManageCategoryModalState extends ConsumerState<ManageCategoryModal> {
               ),
               controller: _titleController,
               validator: (String? value) {
-                return (value != null && value.contains('@'))
-                    ? 'Do not use the @ char.'
-                    : null;
+                if (value!.isEmpty) {
+                  return 'Please enter title';
+                } else {
+                  return null;
+                }
               },
               autofocus: true,
             ),
@@ -119,9 +106,11 @@ class ManageCategoryModalState extends ConsumerState<ManageCategoryModal> {
               maxLines: null,
               controller: _descController,
               validator: (String? value) {
-                return (value != null && value.contains('@'))
-                    ? 'Do not use the @ char.'
-                    : null;
+                if (value!.isEmpty) {
+                  return 'Please enter description';
+                } else {
+                  return null;
+                }
               },
               autofocus: true,
             ),
@@ -171,17 +160,18 @@ class ManageCategoryModalState extends ConsumerState<ManageCategoryModal> {
                   controller: _passwordController,
                   validator: (String? value) {
                     RegExp regex = RegExp(
-                        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$');
+                        //regex to enter valid password with 8 char , one Capital etc
+                        // r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$'
+                        //new reg to check if only has no whitespace and more that 4
+                        r"^\S{4,}$");
                     if (value == null) {
                       return 'Please enter password';
                     } else if (value.isEmpty) {
                       return 'Please enter password';
+                    } else if (!regex.hasMatch(value)) {
+                      return 'Enter valid password';
                     } else {
-                      if (!regex.hasMatch(value)) {
-                        return 'Enter valid password';
-                      } else {
-                        return null;
-                      }
+                      return null;
                     }
                   },
                   autofocus: true,
@@ -207,10 +197,16 @@ class ManageCategoryModalState extends ConsumerState<ManageCategoryModal> {
                   ),
                   ElevatedButton(
                     style: raisedButtonStyle(Colors.green),
-                    onPressed: () {
+                    onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Processing Data')),
+                        await _serviceClass.saveCategoryInfo(
+                          _categoryItemTemp?.id ?? '',
+                          _titleController.text,
+                          _descController.text,
+                          _passwordController.text.isEmpty
+                              ? null
+                              : _passwordController.text,
+                          () => Navigator.pop(context),
                         );
                       }
                     },

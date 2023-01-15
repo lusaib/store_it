@@ -24,10 +24,11 @@ mixin _$CategoryItemModel {
   String get title => throw _privateConstructorUsedError;
   String get desc => throw _privateConstructorUsedError;
   String? get password => throw _privateConstructorUsedError;
-  List<CategorySubItemsModel> get subItems =>
-      throw _privateConstructorUsedError;
   int get position => throw _privateConstructorUsedError;
-  DateTime? get createdDate => throw _privateConstructorUsedError;
+  @TimestampConverter()
+  DateTime get createdDate => throw _privateConstructorUsedError;
+  @TimestampConverter()
+  DateTime get modifiedDate => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -46,9 +47,9 @@ abstract class $CategoryItemModelCopyWith<$Res> {
       String title,
       String desc,
       String? password,
-      List<CategorySubItemsModel> subItems,
       int position,
-      DateTime? createdDate});
+      @TimestampConverter() DateTime createdDate,
+      @TimestampConverter() DateTime modifiedDate});
 }
 
 /// @nodoc
@@ -68,9 +69,9 @@ class _$CategoryItemModelCopyWithImpl<$Res, $Val extends CategoryItemModel>
     Object? title = null,
     Object? desc = null,
     Object? password = freezed,
-    Object? subItems = null,
     Object? position = null,
-    Object? createdDate = freezed,
+    Object? createdDate = null,
+    Object? modifiedDate = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -89,18 +90,18 @@ class _$CategoryItemModelCopyWithImpl<$Res, $Val extends CategoryItemModel>
           ? _value.password
           : password // ignore: cast_nullable_to_non_nullable
               as String?,
-      subItems: null == subItems
-          ? _value.subItems
-          : subItems // ignore: cast_nullable_to_non_nullable
-              as List<CategorySubItemsModel>,
       position: null == position
           ? _value.position
           : position // ignore: cast_nullable_to_non_nullable
               as int,
-      createdDate: freezed == createdDate
+      createdDate: null == createdDate
           ? _value.createdDate
           : createdDate // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
+              as DateTime,
+      modifiedDate: null == modifiedDate
+          ? _value.modifiedDate
+          : modifiedDate // ignore: cast_nullable_to_non_nullable
+              as DateTime,
     ) as $Val);
   }
 }
@@ -118,9 +119,9 @@ abstract class _$$_CategoryItemModelCopyWith<$Res>
       String title,
       String desc,
       String? password,
-      List<CategorySubItemsModel> subItems,
       int position,
-      DateTime? createdDate});
+      @TimestampConverter() DateTime createdDate,
+      @TimestampConverter() DateTime modifiedDate});
 }
 
 /// @nodoc
@@ -138,9 +139,9 @@ class __$$_CategoryItemModelCopyWithImpl<$Res>
     Object? title = null,
     Object? desc = null,
     Object? password = freezed,
-    Object? subItems = null,
     Object? position = null,
-    Object? createdDate = freezed,
+    Object? createdDate = null,
+    Object? modifiedDate = null,
   }) {
     return _then(_$_CategoryItemModel(
       id: null == id
@@ -159,18 +160,18 @@ class __$$_CategoryItemModelCopyWithImpl<$Res>
           ? _value.password
           : password // ignore: cast_nullable_to_non_nullable
               as String?,
-      subItems: null == subItems
-          ? _value._subItems
-          : subItems // ignore: cast_nullable_to_non_nullable
-              as List<CategorySubItemsModel>,
       position: null == position
           ? _value.position
           : position // ignore: cast_nullable_to_non_nullable
               as int,
-      createdDate: freezed == createdDate
+      createdDate: null == createdDate
           ? _value.createdDate
           : createdDate // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
+              as DateTime,
+      modifiedDate: null == modifiedDate
+          ? _value.modifiedDate
+          : modifiedDate // ignore: cast_nullable_to_non_nullable
+              as DateTime,
     ));
   }
 }
@@ -183,10 +184,9 @@ class _$_CategoryItemModel implements _CategoryItemModel {
       required this.title,
       this.desc = "",
       this.password,
-      final List<CategorySubItemsModel> subItems = const [],
       required this.position,
-      this.createdDate})
-      : _subItems = subItems;
+      @TimestampConverter() required this.createdDate,
+      @TimestampConverter() required this.modifiedDate});
 
   factory _$_CategoryItemModel.fromJson(Map<String, dynamic> json) =>
       _$$_CategoryItemModelFromJson(json);
@@ -200,22 +200,18 @@ class _$_CategoryItemModel implements _CategoryItemModel {
   final String desc;
   @override
   final String? password;
-  final List<CategorySubItemsModel> _subItems;
-  @override
-  @JsonKey()
-  List<CategorySubItemsModel> get subItems {
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_subItems);
-  }
-
   @override
   final int position;
   @override
-  final DateTime? createdDate;
+  @TimestampConverter()
+  final DateTime createdDate;
+  @override
+  @TimestampConverter()
+  final DateTime modifiedDate;
 
   @override
   String toString() {
-    return 'CategoryItemModel(id: $id, title: $title, desc: $desc, password: $password, subItems: $subItems, position: $position, createdDate: $createdDate)';
+    return 'CategoryItemModel(id: $id, title: $title, desc: $desc, password: $password, position: $position, createdDate: $createdDate, modifiedDate: $modifiedDate)';
   }
 
   @override
@@ -228,17 +224,18 @@ class _$_CategoryItemModel implements _CategoryItemModel {
             (identical(other.desc, desc) || other.desc == desc) &&
             (identical(other.password, password) ||
                 other.password == password) &&
-            const DeepCollectionEquality().equals(other._subItems, _subItems) &&
             (identical(other.position, position) ||
                 other.position == position) &&
             (identical(other.createdDate, createdDate) ||
-                other.createdDate == createdDate));
+                other.createdDate == createdDate) &&
+            (identical(other.modifiedDate, modifiedDate) ||
+                other.modifiedDate == modifiedDate));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, id, title, desc, password,
-      const DeepCollectionEquality().hash(_subItems), position, createdDate);
+      position, createdDate, modifiedDate);
 
   @JsonKey(ignore: true)
   @override
@@ -257,13 +254,14 @@ class _$_CategoryItemModel implements _CategoryItemModel {
 
 abstract class _CategoryItemModel implements CategoryItemModel {
   factory _CategoryItemModel(
-      {required final String id,
-      required final String title,
-      final String desc,
-      final String? password,
-      final List<CategorySubItemsModel> subItems,
-      required final int position,
-      final DateTime? createdDate}) = _$_CategoryItemModel;
+          {required final String id,
+          required final String title,
+          final String desc,
+          final String? password,
+          required final int position,
+          @TimestampConverter() required final DateTime createdDate,
+          @TimestampConverter() required final DateTime modifiedDate}) =
+      _$_CategoryItemModel;
 
   factory _CategoryItemModel.fromJson(Map<String, dynamic> json) =
       _$_CategoryItemModel.fromJson;
@@ -277,11 +275,13 @@ abstract class _CategoryItemModel implements CategoryItemModel {
   @override
   String? get password;
   @override
-  List<CategorySubItemsModel> get subItems;
-  @override
   int get position;
   @override
-  DateTime? get createdDate;
+  @TimestampConverter()
+  DateTime get createdDate;
+  @override
+  @TimestampConverter()
+  DateTime get modifiedDate;
   @override
   @JsonKey(ignore: true)
   _$$_CategoryItemModelCopyWith<_$_CategoryItemModel> get copyWith =>

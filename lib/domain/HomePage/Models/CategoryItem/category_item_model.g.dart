@@ -6,21 +6,23 @@ part of 'category_item_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+TimestampConverter _$TimestampConverterFromJson(Map<String, dynamic> json) =>
+    TimestampConverter();
+
+Map<String, dynamic> _$TimestampConverterToJson(TimestampConverter instance) =>
+    <String, dynamic>{};
+
 _$_CategoryItemModel _$$_CategoryItemModelFromJson(Map<String, dynamic> json) =>
     _$_CategoryItemModel(
       id: json['id'] as String,
       title: json['title'] as String,
       desc: json['desc'] as String? ?? "",
       password: json['password'] as String?,
-      subItems: (json['subItems'] as List<dynamic>?)
-              ?.map((e) =>
-                  CategorySubItemsModel.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          const [],
       position: json['position'] as int,
-      createdDate: json['createdDate'] == null
-          ? null
-          : DateTime.parse(json['createdDate'] as String),
+      createdDate:
+          const TimestampConverter().fromJson(json['createdDate'] as Timestamp),
+      modifiedDate: const TimestampConverter()
+          .fromJson(json['modifiedDate'] as Timestamp),
     );
 
 Map<String, dynamic> _$$_CategoryItemModelToJson(
@@ -30,7 +32,7 @@ Map<String, dynamic> _$$_CategoryItemModelToJson(
       'title': instance.title,
       'desc': instance.desc,
       'password': instance.password,
-      'subItems': instance.subItems,
       'position': instance.position,
-      'createdDate': instance.createdDate?.toIso8601String(),
+      'createdDate': const TimestampConverter().toJson(instance.createdDate),
+      'modifiedDate': const TimestampConverter().toJson(instance.modifiedDate),
     };

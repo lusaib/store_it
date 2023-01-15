@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "373229889017-5vchqa5fau5vkouflf48hnbt60evociq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lusaiblatheef.store_it",
+            "certificate_hash": "41d23873ed99b92548503c4d5f0e59b4a2aa8904"
+          }
+        },
+        {
           "client_id": "373229889017-ic65d0lh1mn8gta48e0hmga3aalp6pnm.apps.googleusercontent.com",
           "client_type": 3
         }
