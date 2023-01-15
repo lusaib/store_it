@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:store_it/config/logger_config.dart';
 import 'package:store_it/pages/HomePage/home_page.dart';
 
 class MyApp extends StatelessWidget {
@@ -21,6 +21,7 @@ class MyApp extends StatelessWidget {
       splitScreenMode: true,
       builder: (context, child) {
         return MaterialApp(
+          builder: EasyLoading.init(),
           initialRoute:
               FirebaseAuth.instance.currentUser == null ? '/sign-in' : '/home',
           title: 'Store It',
@@ -45,7 +46,6 @@ class MyApp extends StatelessWidget {
             },
             '/home': (context) => const HomePage(),
           },
-          // home: const LoginPage(),
         );
       },
     );

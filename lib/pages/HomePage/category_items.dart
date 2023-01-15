@@ -1,13 +1,14 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:store_it/components/confirmation_modal.dart';
 import 'package:store_it/config/logger_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:store_it/domain/HomePage/LogicFunctions/category_items.dart';
+import 'package:store_it/domain/HomePage/LogicFunctions/category_items_data_service.dart';
 import 'package:store_it/domain/HomePage/Models/CategoryItem/category_item_model.dart';
 import 'package:intl/intl.dart';
 import 'package:store_it/pages/HomePage/change_pass_bottomsheet.dart';
@@ -149,9 +150,18 @@ class ListItem extends ConsumerWidget {
                 });
                 if (!accepted) return;
 
+                bool isSuccess = true;
                 final CategoryItemsDataService serviceLayerClass =
                     CategoryItemsDataService();
-                await serviceLayerClass.deleteCategory(item);
+                await EasyLoading.show(
+                  status: 'loading...',
+                );
+                await serviceLayerClass.deleteCategory(item,
+                    onError: () async => isSuccess = false);
+                await EasyLoading.dismiss();
+                if (!isSuccess) {
+                  await EasyLoading.showError('Failed to delete');
+                }
               },
               backgroundColor: const Color(0xFFFE4A49),
               foregroundColor: Colors.white,

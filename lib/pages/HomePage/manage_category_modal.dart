@@ -1,5 +1,6 @@
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:store_it/components/common_style.dart';
-import 'package:store_it/domain/HomePage/LogicFunctions/category_items.dart';
+import 'package:store_it/domain/HomePage/LogicFunctions/category_items_data_service.dart';
 import 'package:store_it/domain/HomePage/Models/CategoryItem/category_item_model.dart';
 import 'package:store_it/providers/home_page_providers.dart';
 import 'package:flutter/material.dart';
@@ -199,15 +200,23 @@ class ManageCategoryModalState extends ConsumerState<ManageCategoryModal> {
                     style: raisedButtonStyle(Colors.green),
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        await _serviceClass.saveCategoryInfo(
-                          _categoryItemTemp?.id ?? '',
-                          _titleController.text,
-                          _descController.text,
-                          _passwordController.text.isEmpty
-                              ? null
-                              : _passwordController.text,
-                          () => Navigator.pop(context),
+                        bool isSuccess = true;
+                        await EasyLoading.show(
+                          status: 'loading...',
                         );
+                        await _serviceClass.saveCategoryInfo(
+                            _categoryItemTemp?.id ?? '',
+                            _titleController.text,
+                            _descController.text,
+                            _passwordController.text.isEmpty
+                                ? null
+                                : _passwordController.text,
+                            onSuccess: () => Navigator.pop(context),
+                            onError: () async => isSuccess = false);
+                        await EasyLoading.dismiss();
+                        if (!isSuccess) {
+                          await EasyLoading.showError('Failed to save');
+                        }
                       }
                     },
                     child: Text(

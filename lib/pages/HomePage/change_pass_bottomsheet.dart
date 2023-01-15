@@ -1,5 +1,7 @@
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:store_it/components/common_style.dart';
 import 'package:store_it/config/logger_config.dart';
+import 'package:store_it/domain/HomePage/LogicFunctions/category_items_data_service.dart';
 import 'package:store_it/domain/HomePage/Models/CategoryItem/category_item_model.dart';
 import 'package:store_it/providers/home_page_providers.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +25,8 @@ class ChangePassBottomSheetState extends ConsumerState<ChangePassBottomSheet> {
   bool _isPasswordRequired = false;
 
   bool _disableCurrentPass = false;
+
+  final CategoryItemsDataService _serviceClass = CategoryItemsDataService();
 
   @override
   void dispose() {
@@ -138,17 +142,18 @@ class ChangePassBottomSheetState extends ConsumerState<ChangePassBottomSheet> {
                 controller: _newPasswordController,
                 validator: (String? value) {
                   RegExp regex = RegExp(
-                      r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$');
-                  if (!_isPasswordRequired) {
-                    return null;
-                  } else if (value == null || value.isEmpty) {
+                      //regex to enter valid password with 8 char , one Capital etc
+                      // r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$'
+                      //new reg to check if only has no whitespace and more that 4
+                      r"^\S{4,}$");
+                  if (value == null) {
                     return 'Please enter password';
+                  } else if (value.isEmpty) {
+                    return 'Please enter password';
+                  } else if (!regex.hasMatch(value)) {
+                    return 'Enter valid password';
                   } else {
-                    if (!regex.hasMatch(value)) {
-                      return 'Must contain capital letters , numbers and special characters';
-                    } else {
-                      return null;
-                    }
+                    return null;
                   }
                 },
                 onChanged: (value) => _formKey.currentState!.validate(),
@@ -174,8 +179,25 @@ class ChangePassBottomSheetState extends ConsumerState<ChangePassBottomSheet> {
                   ),
                   ElevatedButton(
                     style: raisedButtonStyle(Colors.green),
-                    onPressed: () {
+                    onPressed: () async {
                       if (_formKey.currentState!.validate()) {
+                        bool isSuccess = true;
+                        await EasyLoading.show(
+                          status: 'loading...',
+                        );
+                        await _serviceClass.saveCategoryInfo(
+                            _categoryItemTemp?.id ?? '',
+                            _categoryItemTemp?.title ?? '',
+                            _categoryItemTemp?.desc ?? '',
+                            !_isPasswordRequired
+                                ? null
+                                : _newPasswordController.text,
+                            onSuccess: () => Navigator.pop(context),
+                            onError: () async => isSuccess = false);
+                        await EasyLoading.dismiss();
+                        if (!isSuccess) {
+                          await EasyLoading.showError('Failed to save');
+                        }
                         appLogNoStack.d("Success change password");
                       }
                     },

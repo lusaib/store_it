@@ -9,7 +9,7 @@ class CategoryItemsDataService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<void> deleteCategory(CategoryItemModel item,
-      {VoidCallback? onSuccess}) async {
+      {VoidCallback? onSuccess, VoidCallback? onError}) async {
     appLogNoStack.v("manageCategoryItems started");
     try {
       final FirebaseAuth auth = FirebaseAuth.instance;
@@ -29,14 +29,16 @@ class CategoryItemsDataService {
       onSuccess?.call();
     } catch (e) {
       appLogNoStack.e(e.toString());
-      throw Exception('Failed to delete data');
+      onError?.call();
+      // throw Exception('Failed to delete data');
     }
     appLogNoStack.v("manageCategoryItems ended");
   }
 
 //save category info to cloud
-  Future<void> saveCategoryInfo(String id, String title, String desc,
-      String? password, VoidCallback onSuccess) async {
+  Future<void> saveCategoryInfo(
+      String id, String title, String desc, String? password,
+      {VoidCallback? onSuccess, VoidCallback? onError}) async {
     appLogNoStack.v("manageCategoryItems started");
     try {
       final Map<String, dynamic> temp = CategoryItemModel(
@@ -64,12 +66,13 @@ class CategoryItemsDataService {
         await collectionPath.doc(temp['id']).update(temp);
       }
       appLogNoStack.v("manageCategoryItems managed document successfully");
-      onSuccess.call();
+      onSuccess?.call();
     } catch (err) {
       appLogNoStack
           .e("Error - manageCategoryItems function - ${err.toString()}");
 
-      throw Exception('Failed to manage data');
+      // throw Exception('Failed to manage data');
+      onError?.call();
     }
     appLogNoStack.v("manageCategoryItems ended");
   }
